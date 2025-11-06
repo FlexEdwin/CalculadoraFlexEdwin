@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-M">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora Eduin Rivera</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: grid;
-            place-items: center;
-            min-height: 90vh;
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column; 
+            align-items: center;
+            justify-content: space-between; 
             background: linear-gradient(45deg, #007bff, #28a745, #000000, #007bff);
             background-size: 400% 400%;
             animation: gradientShift 10s ease infinite;
             margin: 0;
             padding: 20px;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
         }
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
@@ -25,7 +27,7 @@
         }
         .watermark {
             position: absolute;
-            font-size: 60px; /* Reducido para móviles */
+            font-size: 60px;
             color: rgba(255, 255, 255, 0.08);
             font-weight: bold;
             pointer-events: none;
@@ -58,7 +60,7 @@
         /* Media query para móviles: ajustar tamaño de watermarks */
         @media (max-width: 768px) {
             .watermark {
-                font-size: 40px; /* Más pequeño en móviles */
+                font-size: 40px;
             }
         }
         .container {
@@ -133,10 +135,37 @@
             background-color: #fffbe6;
             color: #b38600;
         }
+
+        /* ESTILOS DEL FOOTER */
+        .footer-container {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 20px;
+            z-index: 1;
+        }
+        footer {
+            text-align: center;
+            color: #ffffff;
+            font-size: 14px;
+            padding: 10px 0;
+            opacity: 0.8;
+        }
+        footer a {
+            color: #90caf9;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .contact-info {
+            display: block;
+            margin-top: 5px;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
-    <!-- Watermarks dinámicos distribuidos por toda la pantalla -->
     <div class="watermark">@flexedwin</div>
     <div class="watermark">@flexedwin</div>
     <div class="watermark">@flexedwin</div>
@@ -191,6 +220,18 @@
             </div>
         </div>
     </div>
+    
+    <div class="footer-container">
+        <footer>
+            Creado por: **Eduin Rivera** | &copy; 2025 | Versión 1.0.0
+            <span class="contact-info">
+                📧 Correo: <a href="mailto:flexedwin@hotmail.com">flexedwin@hotmail.com</a>
+                <br>
+                📱 WhatsApp: <a href="https://wa.me/573166173884" target="_blank">316 617 3884</a>
+            </span>
+        </footer>
+    </div>
+    
 
     <script>
         function calcular() {
@@ -205,6 +246,9 @@
                 alert("Por favor, ingresa valores numéricos positivos en todos los campos.");
                 return;
             }
+
+            // Convertir kΩ a Ω para cálculos si es necesario, pero las fórmulas relativas funcionan igual con kΩ.
+            // Se asume que las fórmulas se mantienen consistentes con las unidades (kΩ).
 
             // Calcular equivalentes (Fórmulas A)
             const Req1 = (R1 * Ro) / (R1 + Ro); // R1 || Ro
