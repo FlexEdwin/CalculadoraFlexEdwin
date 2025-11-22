@@ -3,296 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solución Visual Taller Circuitos</title>
+    <title>Solución Gráfica y Detallada - Taller de Circuitos</title>
     <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             padding: 20px;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; }
-        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 40px; }
-        
-        .section { margin-bottom: 60px; border-bottom: 2px solid #eee; padding-bottom: 40px; }
-        h2 { color: #2980b9; border-left: 5px solid #2980b9; padding-left: 15px; margin-bottom: 20px; }
-        
-        .step {
-            background: #f9f9f9;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid #27ae60;
-        }
-        .step-title { font-weight: bold; font-size: 1.1em; color: #27ae60; margin-bottom: 10px; }
-        
-        .formula {
-            font-family: 'Courier New', monospace;
-            background: #2c3e50;
-            color: #ecf0f1;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            margin: 10px 0;
-            font-weight: bold;
         }
 
-        /* ESTILOS PARA LOS DIAGRAMAS SVG */
-        .circuit-diagram {
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 { font-size: 2.5em; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        header p { font-size: 1.2em; opacity: 0.9; font-weight: 300; }
+
+        /* SECCIONES */
+        .problem-section {
+            padding: 40px;
+            border-bottom: 1px solid #eee;
+        }
+
+        h2 {
+            color: var(--secondary);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 30px;
+            background: var(--accent);
+            margin-right: 15px;
+            border-radius: 2px;
+        }
+
+        h3 { color: var(--primary); margin-top: 30px; margin-bottom: 15px; }
+
+        /* STEPS */
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid var(--secondary);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .step-header {
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        /* DIAGRAMAS SVG */
+        .diagram-container {
             display: flex;
             justify-content: center;
             margin: 20px 0;
             background: white;
-            padding: 10px;
-            border: 1px dashed #ccc;
-            border-radius: 8px;
-        }
-        
-        svg {
-            max-width: 100%;
-            height: auto;
-            font-family: sans-serif;
-        }
-        
-        text { font-size: 12px; fill: #333; font-weight: bold; }
-        .cap-label { fill: #e74c3c; font-size: 14px; }
-        .wire { stroke: #333; stroke-width: 2; fill: none; }
-        .node { fill: #333; }
-        .component { stroke: #e74c3c; stroke-width: 2; fill: white; } /* Capacitor plates logic handled in SVG paths */
-        
-        .warning-box {
-            background: #fff3cd;
-            border: 1px solid #ffeeba;
-            color: #856404;
+            border: 1px dashed #bdc3c7;
             padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
+            border-radius: 8px;
         }
 
-        .result-box {
-            background: #d4edda;
-            color: #155724;
-            padding: 20px;
-            text-align: center;
-            font-size: 1.5em;
+        svg { max-width: 100%; height: auto; }
+        text { font-family: sans-serif; font-weight: bold; fill: #333; font-size: 12px; }
+        .wire { stroke: #2c3e50; stroke-width: 2; fill: none; }
+        .component-box { fill: white; stroke: #2c3e50; stroke-width: 2; }
+        .highlight-comp { stroke: var(--accent); stroke-width: 3; }
+        .highlight-fill { fill: #fadbd8; }
+        .node { fill: var(--primary); }
+        .label-val { fill: var(--accent); font-size: 13px; }
+
+        /* FORMULAS */
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: var(--primary);
+            color: var(--light);
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 5px 0;
             font-weight: bold;
-            border-radius: 8px;
-            border: 2px solid #c3e6cb;
         }
+
+        /* RESULTADOS */
+        .result-card {
+            background: #d5f5e3;
+            border: 2px solid var(--success);
+            color: #196f3d;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .result-card h4 { font-size: 1.5em; margin-bottom: 5px; }
+
+        /* TABLES */
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: var(--light); color: var(--primary); }
+
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Solución Visual Paso a Paso</h1>
-    <p class="subtitle">Con diagramas simplificados generados dinámicamente</p>
+    <header>
+        <h1>Taller de Circuitos Eléctricos</h1>
+        <p>Solución Profesional Paso a Paso con Gráficas</p>
+    </header>
 
-    <!-- PROBLEMA 1 -->
-    <div class="section">
-        <h2>1. Capacitancia Equivalente (Corregido)</h2>
-        
-        <div class="warning-box">
-            <strong>⚠️ Nota sobre tu procedimiento manual:</strong><br>
-            En tu hoja, paso 3, calculaste <code>(60*60)/(60+60)=30</code>. Esto es un error.
-            El capacitor de arriba es de <strong>120</strong> (no 60). El cálculo correcto es <code>(120*60)/(120+60)=40</code>.
-            A continuación verás la solución visual con los valores correctos.
-        </div>
+    <!-- ================= PROBLEMA 1 ================= -->
+    <section class="problem-section">
+        <h2>1. Capacitancia Equivalente (C<sub>eq</sub>)</h2>
+        <p><strong>Objetivo:</strong> Reducir el circuito puente capacitivo a una sola capacitancia vista desde a-b.</p>
 
-        <!-- PASO 1 -->
         <div class="step">
-            <div class="step-title">Paso 1: Simplificación Inicial (Paralelos)</div>
-            <p>Combinamos los capacitores de arriba (40+80) y los de la derecha (30+20+10).</p>
-            <div class="formula">C_arriba = 120 F &nbsp;|&nbsp; C_derecha = 60 F</div>
+            <span class="step-header">Paso 1: Simplificación de Paralelos Iniciales</span>
+            <p>Identificamos dos grupos en paralelo:</p>
+            <ul>
+                <li><strong>Rama Superior:</strong> 40 F || 80 F → Suma directa = <span class="formula">120 F</span></li>
+                <li><strong>Rama Derecha:</strong> 30 F || 20 F || 10 F → Suma directa = <span class="formula">60 F</span></li>
+            </ul>
             
-            <div class="circuit-diagram">
-                <!-- SVG Diagrama Paso 1 -->
-                <svg width="400" height="200" viewBox="0 0 400 200">
+            <div class="diagram-container">
+                <!-- SVG P1 STEP 1 -->
+                <svg width="500" height="200" viewBox="0 0 500 200">
                     <!-- Wires -->
-                    <path d="M 50 100 L 100 100" class="wire"/> <!-- Input to Node A -->
-                    <path d="M 100 100 L 100 180" class="wire"/> <!-- A down to 12 -->
-                    <path d="M 100 100 L 200 50 L 300 100" class="wire"/> <!-- Top Branch -->
-                    <path d="M 100 100 L 300 100" class="wire"/> <!-- Diagonal line -->
-                    <path d="M 300 100 L 300 180" class="wire"/> <!-- Right Branch -->
-                    <path d="M 50 180 L 300 180" class="wire"/> <!-- Bottom line -->
+                    <path d="M50,100 L100,100" class="wire"/>
+                    <path d="M100,100 L100,180" class="wire"/>
+                    <path d="M100,100 L250,50 L400,100" class="wire"/> <!-- Top arc -->
+                    <path d="M100,100 L400,100" class="wire"/> <!-- Middle diag -->
+                    <path d="M400,100 L400,180" class="wire"/> <!-- Right vertical -->
+                    <path d="M50,180 L400,180" class="wire"/> <!-- Bottom rail -->
                     
-                    <!-- Components (Simplified Rectangles for Capacitors) -->
-                    <!-- Input 12 -->
-                    <rect x="65" y="90" width="20" height="20" fill="white" stroke="#333" stroke-width="1"/>
-                    <line x1="75" y1="90" x2="75" y2="110" stroke="#e74c3c" stroke-width="2"/>
-                    <line x1="80" y1="90" x2="80" y2="110" stroke="#e74c3c" stroke-width="2"/>
+                    <!-- Components -->
+                    <g transform="translate(75,90)"><rect width="10" height="20" fill="white"/><line x1="0" y1="0" x2="0" y2="20" stroke="#e74c3c" stroke-width="2"/><line x1="10" y1="0" x2="10" y2="20" stroke="#e74c3c" stroke-width="2"/></g>
                     <text x="65" y="85">12</text>
 
-                    <!-- Left Vertical 12 -->
-                    <rect x="90" y="130" width="20" height="20" fill="white" stroke="#333" stroke-width="1"/>
-                    <line x1="90" y1="140" x2="110" y2="140" stroke="#e74c3c" stroke-width="2" transform="rotate(90 100 140)"/>
-                    <text x="75" y="145">12</text>
-
-                    <!-- Top 120 -->
-                    <rect x="190" y="40" width="20" height="20" fill="white" stroke="#333" stroke-width="1"/>
-                    <line x1="200" y1="40" x2="200" y2="60" stroke="#e74c3c" stroke-width="2"/>
-                    <line x1="205" y1="40" x2="205" y2="60" stroke="#e74c3c" stroke-width="2"/>
-                    <text x="190" y="35" class="cap-label">120</text>
-
-                    <!-- Diag 50 -->
-                    <rect x="190" y="90" width="20" height="20" fill="white" stroke="#333" stroke-width="1"/>
-                    <line x1="200" y1="90" x2="200" y2="110" stroke="#e74c3c" stroke-width="2"/>
-                    <line x1="205" y1="90" x2="205" y2="110" stroke="#e74c3c" stroke-width="2"/>
-                    <text x="190" y="125">50</text>
-
-                    <!-- Right 60 -->
-                    <rect x="290" y="130" width="20" height="20" fill="white" stroke="#333" stroke-width="1"/>
-                    <line x1="290" y1="140" x2="310" y2="140" stroke="#e74c3c" stroke-width="2" transform="rotate(90 300 140)"/>
-                    <text x="315" y="145" class="cap-label">60</text>
-
-                    <!-- Bottom 60 -->
-                    <rect x="190" y="170" width="20" height="20" fill="white" stroke="#333" stroke-width="1"/>
-                    <line x1="200" y1="170" x2="200" y2="190" stroke="#e74c3c" stroke-width="2"/>
-                    <line x1="205" y1="170" x2="205" y2="190" stroke="#e74c3c" stroke-width="2"/>
-                    <text x="190" y="165">60</text>
+                    <g transform="translate(240,40)"><rect width="20" height="20" fill="white"/><line x1="10" y1="0" x2="10" y2="20" stroke="#e74c3c" stroke-width="2"/><text x="-10" y="-10" class="label-val">120 (Eq)</text></g>
                     
-                    <!-- Terminals -->
-                    <circle cx="50" cy="100" r="3" class="node"/> <text x="40" y="95">a</text>
-                    <circle cx="50" cy="180" r="3" class="node"/> <text x="40" y="185">b</text>
+                    <g transform="translate(390,130)"><rect width="20" height="20" fill="white"/><line x1="0" y1="10" x2="20" y2="10" stroke="#e74c3c" stroke-width="2" transform="rotate(90 10 10)"/><text x="25" y="10" class="label-val">60 (Eq)</text></g>
+
+                    <text x="250" y="120">Diagonal: 50</text>
+                    <text x="250" y="170">Fondo: 60</text>
+                    
+                    <!-- Nodes -->
+                    <circle cx="50" cy="100" r="4" class="node"/><text x="35" y="95">a</text>
+                    <circle cx="50" cy="180" r="4" class="node"/><text x="35" y="185">b</text>
                 </svg>
             </div>
         </div>
 
-        <!-- PASO 2 -->
         <div class="step">
-            <div class="step-title">Paso 2: Serie Superior-Derecha (Corrección del error manual)</div>
-            <p>La corriente que va por arriba (120) baja obligatoriamente por la derecha (60). Están en serie.</p>
-            <div class="formula">(120 × 60) / (120 + 60) = 40 F</div>
-            <p><em>(En tu hoja calculaste 30 porque usaste 60 en vez de 120 arriba).</em></p>
+            <span class="step-header">Paso 2: Serie y Paralelo Central</span>
+            <p>La rama superior (120 F) está en <strong>serie</strong> con la rama derecha (60 F).</p>
+            <span class="formula">C_serie = (120 × 60) / (120 + 60) = 40 F</span>
+            <p>Este resultado queda en <strong>paralelo</strong> con la diagonal (50 F).</p>
+            <span class="formula">C_central = 40 + 50 = 90 F</span>
+
+            <div class="diagram-container">
+                <!-- SVG P1 STEP 2 -->
+                <svg width="500" height="150" viewBox="0 0 500 150">
+                    <path d="M50,75 L150,75" class="wire"/>
+                    <path d="M150,75 L150,130" class="wire"/>
+                    <path d="M50,130 L350,130" class="wire"/>
+                    <!-- Combined Block -->
+                    <rect x="200" y="50" width="100" height="50" class="component-box highlight-fill"/>
+                    <text x="220" y="80" class="label-val">90 F (Eq)</text>
+                    <path d="M150,75 L200,75" class="wire"/>
+                    <path d="M300,75 L350,75 L350,130" class="wire"/>
+                    
+                    <text x="360" y="100">Luego serie con 60</text>
+                </svg>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-header">Paso Final: Reducción Total</span>
+            <p>1. El bloque de 90 F está en <strong>serie</strong> con el capacitor de fondo de 60 F: <span class="formula">36 F</span></p>
+            <p>2. Ese resultado está en <strong>paralelo</strong> con el vertical izquierdo de 12 F: <span class="formula">48 F</span></p>
+            <p>3. Finalmente, en <strong>serie</strong> con la entrada de 12 F.</p>
             
-            <div class="circuit-diagram">
-                <svg width="400" height="180" viewBox="0 0 400 180">
-                    <path d="M 50 80 L 100 80" class="wire"/>
-                    <path d="M 100 80 L 100 160" class="wire"/>
-                    <!-- Combined Branch -->
-                    <path d="M 100 80 L 300 80 L 300 160" class="wire" stroke-dasharray="5,5"/>
-                    <path d="M 100 80 L 300 160" class="wire"/> <!-- Diag 50 stays -->
-                    <path d="M 50 160 L 300 160" class="wire"/>
-                    
-                    <!-- Caps -->
-                    <!-- Input 12 -->
-                    <line x1="75" y1="70" x2="75" y2="90" stroke="#e74c3c" stroke-width="2"/> <line x1="80" y1="70" x2="80" y2="90" stroke="#e74c3c" stroke-width="2"/>
-                    
-                    <!-- Left 12 -->
-                    <line x1="90" y1="120" x2="110" y2="120" stroke="#e74c3c" stroke-width="2" transform="rotate(90 100 120)"/>
-                    
-                    <!-- The NEW Series 40 -->
-                    <rect x="250" y="70" width="20" height="20" fill="#fff3cd" stroke="#333" stroke-width="1"/>
-                    <line x1="260" y1="70" x2="260" y2="90" stroke="#e74c3c" stroke-width="2"/> <line x1="265" y1="70" x2="265" y2="90" stroke="#e74c3c" stroke-width="2"/>
-                    <text x="250" y="65" class="cap-label">40 (Eq)</text>
-
-                    <!-- Diag 50 -->
-                    <line x1="190" y1="110" x2="190" y2="130" stroke="#e74c3c" stroke-width="2" transform="rotate(-45 200 120)"/> <text x="180" y="140">50</text>
-                    
-                    <!-- Bottom 60 -->
-                    <line x1="200" y1="150" x2="200" y2="170" stroke="#e74c3c" stroke-width="2"/> <line x1="205" y1="150" x2="205" y2="170" stroke="#e74c3c" stroke-width="2"/> <text x="200" y="195">60</text>
-                </svg>
+            <div class="result-card">
+                <h4>Resultado Problema 1</h4>
+                <p>C<sub>eq</sub> = (12 × 48) / (12 + 48) = <strong>9.6 F</strong></p>
             </div>
         </div>
+    </section>
 
-        <!-- PASO 3 -->
+    <!-- ================= PROBLEMA 2 ================= -->
+    <section class="problem-section">
+        <h2>2. Inductancia Equivalente (L<sub>eq</sub>)</h2>
+        <p><strong>Objetivo:</strong> Resolver el puente inductivo usando transformación Estrella-Delta en el núcleo derecho.</p>
+
         <div class="step">
-            <div class="step-title">Paso 3: Paralelo con la Diagonal</div>
-            <p>Ahora la rama equivalente de 40 queda en paralelo con la diagonal de 50 (ambas conectan Nodo A con Nodo C).</p>
-            <div class="formula">40 + 50 = 90 F</div>
+            <span class="step-header">Paso 1: Identificar la Estrella (Y)</span>
+            <p>Simplificamos la salida derecha (12 || 4 = 3 mH). Ahora identificamos la conexión en Estrella en el nodo central.</p>
             
-            <div class="circuit-diagram">
-                <svg width="400" height="160" viewBox="0 0 400 160">
-                    <path d="M 50 50 L 100 50" class="wire"/>
-                    <path d="M 100 50 L 100 130" class="wire"/>
-                    <!-- Combined 90 -->
-                    <path d="M 100 50 L 300 50 L 300 130" class="wire"/>
-                    <path d="M 50 130 L 300 130" class="wire"/>
+            <div class="diagram-container">
+                <!-- SVG P2 STAR -->
+                <svg width="400" height="200" viewBox="0 0 400 200">
+                    <!-- Outer Box -->
+                    <rect x="100" y="20" width="200" height="160" fill="none" stroke="#ccc" stroke-dasharray="5,5" stroke-width="2"/>
+                    <text x="105" y="40" fill="#999">Marco 8mH</text>
                     
-                    <!-- Input 12 -->
-                    <line x1="75" y1="40" x2="75" y2="60" stroke="#e74c3c" stroke-width="2"/> <line x1="80" y1="40" x2="80" y2="60" stroke="#e74c3c" stroke-width="2"/>
+                    <!-- The Star -->
+                    <line x1="100" y1="20" x2="200" y2="100" class="wire highlight-comp"/> <!-- 5mH -->
+                    <line x1="100" y1="180" x2="200" y2="100" class="wire highlight-comp"/> <!-- 6mH -->
+                    <line x1="300" y1="100" x2="200" y2="100" class="wire highlight-comp"/> <!-- 3mH -->
                     
-                    <!-- Left 12 -->
-                    <line x1="90" y1="90" x2="110" y2="90" stroke="#e74c3c" stroke-width="2" transform="rotate(90 100 90)"/>
+                    <circle cx="200" cy="100" r="6" fill="#e74c3c"/>
+                    <text x="210" y="100" fill="#e74c3c">Nodo Central</text>
                     
-                    <!-- NEW 90 -->
-                    <rect x="250" y="40" width="20" height="20" fill="#d4edda" stroke="#333" stroke-width="1"/>
-                    <line x1="260" y1="40" x2="260" y2="60" stroke="#e74c3c" stroke-width="2"/> <line x1="265" y1="40" x2="265" y2="60" stroke="#e74c3c" stroke-width="2"/>
-                    <text x="250" y="35" class="cap-label">90 (Eq)</text>
-
-                    <!-- Bottom 60 -->
-                    <line x1="230" y1="120" x2="230" y2="140" stroke="#e74c3c" stroke-width="2"/> <line x1="235" y1="120" x2="235" y2="140" stroke="#e74c3c" stroke-width="2"/> <text x="230" y="155">60</text>
+                    <text x="130" y="70" class="label-val">5 mH</text>
+                    <text x="130" y="150" class="label-val">6 mH</text>
+                    <text x="240" y="90" class="label-val">3 mH</text>
                 </svg>
             </div>
         </div>
 
-        <!-- PASO 4 -->
         <div class="step">
-            <div class="step-title">Paso 4: Serie con el Fondo</div>
-            <p>El bloque de 90 está en serie con el capacitor de 60 que va a tierra.</p>
-            <div class="formula">(90 × 60) / (90 + 60) = 36 F</div>
+            <span class="step-header">Paso 2: Transformación a Delta (Δ)</span>
+            <p>Calculamos los valores equivalentes para eliminar el nodo central:</p>
+            <p>Numerador N = (5×6) + (6×3) + (3×5) = 63.</p>
+            
+            <div class="diagram-container">
+                <!-- SVG P2 DELTA -->
+                <svg width="400" height="200" viewBox="0 0 400 200">
+                    <!-- The Delta replacing the star -->
+                    <path d="M100,20 L100,180" class="wire highlight-comp"/> <!-- Vert Left -->
+                    <path d="M100,20 L300,100" class="wire highlight-comp"/> <!-- Top Right -->
+                    <path d="M100,180 L300,100" class="wire highlight-comp"/> <!-- Bot Right -->
+                    
+                    <text x="60" y="100" class="label-val">La = 21 mH</text>
+                    <text x="180" y="50" class="label-val">Lb = 10.5 mH</text>
+                    <text x="180" y="160" class="label-val">Lc = 12.6 mH</text>
+                    
+                    <text x="310" y="100">Salida Común</text>
+                </svg>
+            </div>
+            <p>Estos nuevos inductores quedan en paralelo con el marco de 8 mH.</p>
+        </div>
 
-            <div class="circuit-diagram">
+        <div class="step">
+            <span class="step-header">Cálculo Final</span>
+            <p>Tras reducir los paralelos y sumar las series:</p>
+            <div class="result-card">
+                <h4>Resultado Problema 2</h4>
+                <p>L<sub>eq</sub> ≈ <strong>19.59 mH</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= PROBLEMA 3 ================= -->
+    <section class="problem-section">
+        <h2>3. Equivalente de Thevenin</h2>
+        <p><strong>Objetivo:</strong> Hallar V<sub>th</sub> y R<sub>th</sub>. Importante: Fuentes con negativo arriba.</p>
+
+        <div class="step">
+            <span class="step-header">Paso A: Voltaje Thevenin (Análisis Nodal)</span>
+            <p>El circuito tiene 3 nodos principales. Las flechas rojas indican la polaridad real (subida de potencial hacia abajo).</p>
+            
+            <div class="diagram-container">
+                <!-- SVG P3 NODAL -->
+                <svg width="500" height="220" viewBox="0 0 500 220">
+                    <!-- Ground Line -->
+                    <line x1="50" y1="200" x2="450" y2="200" class="wire"/>
+                    <text x="250" y="215">Referencia (0V)</text>
+                    
+                    <!-- Sources -->
+                    <circle cx="100" cy="150" r="15" fill="white" stroke="#e74c3c" stroke-width="2"/>
+                    <text x="92" y="155" fill="#e74c3c" font-weight="bold">- +</text>
+                    <text x="60" y="155">30V</text>
+                    
+                    <circle cx="400" cy="150" r="15" fill="white" stroke="#e74c3c" stroke-width="2"/>
+                    <text x="392" y="155" fill="#e74c3c" font-weight="bold">- +</text>
+                    <text x="420" y="155">20V</text>
+                    
+                    <!-- Nodes -->
+                    <circle cx="100" cy="50" r="5" class="node"/><text x="90" y="40">V1</text>
+                    <circle cx="250" cy="50" r="5" class="node"/><text x="240" y="40">V2</text>
+                    <circle cx="400" cy="50" r="5" class="node"/><text x="390" y="40">V3(b)</text>
+                    
+                    <!-- Resistors -->
+                    <rect x="95" y="80" width="10" height="40" class="component-box"/><text x="110" y="100">10Ω</text>
+                    <rect x="160" y="45" width="40" height="10" class="component-box"/><text x="170" y="35">10Ω</text>
+                    <rect x="310" y="45" width="40" height="10" class="component-box"/><text x="320" y="35">20Ω</text>
+                    
+                    <!-- Bridge Resistor -->
+                    <path d="M100,50 Q250,0 400,50" fill="none" stroke="#2c3e50" stroke-width="2"/>
+                    <rect x="230" y="15" width="40" height="10" class="component-box" fill="white"/>
+                    <text x="235" y="30">20Ω</text>
+                    
+                    <!-- Current Source -->
+                    <line x1="250" y1="50" x2="250" y2="200" class="wire"/>
+                    <circle cx="250" cy="120" r="15" fill="white" stroke="#2980b9" stroke-width="2"/>
+                    <text x="245" y="125" fill="#2980b9">↑</text>
+                </svg>
+            </div>
+            <p>Al resolver el sistema de ecuaciones considerando los voltajes negativos (-30V, -20V):</p>
+            <p><span class="formula">V_th = Va - Vb = (-7.43) - (-8.00) = 0.57 V</span></p>
+        </div>
+
+        <div class="step">
+            <span class="step-header">Paso B: Resistencia Thevenin (Fuentes Apagadas)</span>
+            <p>Las fuentes de voltaje son cortocircuitos. La topología resistiva resultante es un puente que requiere transformación Y-Δ en el nodo central.</p>
+            
+            <div class="diagram-container">
+                <!-- SVG P3 RTH -->
                 <svg width="400" height="150" viewBox="0 0 400 150">
-                    <path d="M 50 50 L 100 50" class="wire"/>
-                    <path d="M 100 50 L 100 130" class="wire"/>
-                    <!-- Combined 36 loop back -->
-                    <path d="M 100 50 L 250 50 L 250 130 L 100 130" class="wire"/>
-                    <path d="M 50 130 L 100 130" class="wire"/>
+                    <text x="10" y="20">Fuentes Apagadas:</text>
+                    <!-- Resistor Network Diagram -->
+                    <path d="M50,100 L150,50 L250,100 L150,150 Z" class="wire" fill="none"/>
+                    <circle cx="150" cy="100" r="3" fill="red"/>
+                    <text x="160" y="105" fill="red">Nodo Central a transformar</text>
                     
-                    <!-- Input 12 -->
-                    <line x1="75" y1="40" x2="75" y2="60" stroke="#e74c3c" stroke-width="2"/> <line x1="80" y1="40" x2="80" y2="60" stroke="#e74c3c" stroke-width="2"/>
+                    <rect x="90" y="70" width="20" height="10" class="component-box" transform="rotate(-30 100 75)"/>
+                    <rect x="190" y="70" width="20" height="10" class="component-box" transform="rotate(30 200 75)"/>
+                    <line x1="150" y1="50" x2="150" y2="150" class="wire" stroke-dasharray="4"/>
                     
-                    <!-- Left 12 -->
-                    <line x1="90" y1="90" x2="110" y2="90" stroke="#e74c3c" stroke-width="2" transform="rotate(90 100 90)"/>
-                    
-                    <!-- NEW 36 -->
-                    <rect x="240" y="80" width="20" height="20" fill="#cce5ff" stroke="#333" stroke-width="1"/>
-                    <line x1="250" y1="80" x2="250" y2="100" stroke="#e74c3c" stroke-width="2"/> <line x1="255" y1="80" x2="255" y2="100" stroke="#e74c3c" stroke-width="2"/>
-                    <text x="265" y="95" class="cap-label">36 (Eq)</text>
+                    <text x="10" y="140" font-size="10px">La Estrella central (10, 20, 10) se convierte en Delta</text>
                 </svg>
             </div>
-        </div>
-
-        <!-- PASO FINAL -->
-        <div class="step">
-            <div class="step-title">Paso 5: Paralelo Final y Entrada</div>
-            <p>La rama de 36 queda en paralelo con la vertical de 12 (Suma = 48). Finalmente, se suma en serie con la entrada de 12.</p>
-            <div class="formula">C_eq = (12 × 48) / (12 + 48) = 9.6 F</div>
-            
-            <div class="result-box">
-                Respuesta: 9.6 F
+            <p>Calculando la resistencia equivalente total:</p>
+            <div class="result-card">
+                <h4>Resultado Problema 3</h4>
+                <p>V<sub>th</sub> = <strong>0.57 V</strong></p>
+                <p>R<sub>th</sub> = <strong>17.43 Ω</strong></p>
             </div>
         </div>
-    </div>
-
-    <!-- PROBLEMA 2 -->
-    <div class="section">
-        <h2>2. Inductancia Equivalente</h2>
-        <p><em>(Procedimiento matemático completo incluido en la sección anterior)</em></p>
-        <div class="result-box">
-            Leq = 19.59 mH
-        </div>
-    </div>
-
-    <!-- PROBLEMA 3 -->
-    <div class="section">
-        <h2>3. Thevenin</h2>
-        <p><em>(Procedimiento matemático completo incluido en la sección anterior)</em></p>
-        <div class="result-box">
-            Vth = 0.57 V<br>
-            Rth = 17.43 Ω
-        </div>
-    </div>
+    </section>
 
 </div>
 
